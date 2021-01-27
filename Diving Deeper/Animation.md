@@ -16,6 +16,7 @@
 3. Animation
 
    - Performer 가 수행할 동작들에 대한 기술 (`cf. script, film`)
+   - **하나의 Animation 은 하나의 Property 만을 바꿀 수 있다**
 
 4. Scripted Performer
 
@@ -150,4 +151,82 @@ scene.beginDirectAnimation(
   true	// loop
 );
 ```
+
+## Animatable
+
+> Animation 을 실행하는 method 는 `Animatable` object 를 반환
+>
+> 실행 중인 Animation 에 대한 조작을 method 로 지원
+
+### Animation 조작
+
+1. goToFrame
+   - 해당 프레임으로 이동
+2. pause
+3. reset
+4. restart
+5. stop
+   - animationName 을 인자로 넣어, 특정 Animation 만 정지 가능
+6. syncWith
+   - 길이가 다른 Animation 간 동기화
+
+## Grouping Animations
+
+> 여러 개의 Animation 들을 하나의 그룹으로 묶어서 조작
+
+### Forming Groups
+
+### AnimationGroup constructor 로 생성
+
+```js
+const animationGroup1 = new BABYLON.AnimationGroup(
+  "Group1"	// groupName
+);
+const animationGroup2 = new BABYLON.AnimationGroup(
+  "Group2"
+);
+```
+
+### addTargetAnimation method 로 추가
+
+```js
+// animation, performer 를 인자로 addTargetAnimation method 호출하여 Group 에 추가
+animationGroup1.addTargetedAnimation(animation1, mesh1);
+animationGroup1.addTargetedAnimation(animation3, mesh1);
+animationGroup1.addTargetedAnimation(animation2, mesh2);
+
+animationGroup2.addTargetedAnimation(animation2, mesh3);
+animationGroup2.addTargetedAnimation(animation1, mesh4);
+animationGroup2.addTargetedAnimation(animation2, mesh4);
+animationGroup2.addTargetedAnimation(animation3, mesh4);
+```
+
+### Normalize a Group
+
+```js
+animationGroup2.normalize(
+  0,	// beginFrame
+  100	// endFrame
+);
+```
+
+- Animation 간 타임라인을 맞추기 위해 사용
+- beginFrame 은 Group 내 모든 Animation 들의 시작 frame 보다 작거나 같다
+- endFrame 은 Group 내 모든 Animation 들의 끝 frame 보다 크거나 같다
+
+### Existing Animatables 로 AnimationGroup 생성
+
+```js
+const animationGroup = new BABYLON.AnimationGroup(
+  "my-animation-group"	// groupName
+);
+
+for (anim of idleAnim.getAnimations()) {	// idleAnim 의 animations 를 iterate
+  animationGroup.addTargetedAnimation(
+    anim.animation,	// animation
+    anim.target);	// performer
+}
+```
+
+
 
